@@ -1,7 +1,7 @@
 # Small web engine written in GoLang
 
 ## Description
-Web Tutorial project based upon GoLangs site in order to learn Go.
+Web Project to learn go and create a Wiki and blog for me to post code stuff im up to
 
 ## Goals
 - Learn GoLang basics a bit more than I already do
