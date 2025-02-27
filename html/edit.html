@@ -1,0 +1,5 @@
+<h1>Edit {{ .Title }}</h1>
+<form action="/save/{{ .Title }}">
+    <input name="body" value="{{ printf "%s" .Body }}"></input>
+    <button type="submit">Save</button>
+</form>
