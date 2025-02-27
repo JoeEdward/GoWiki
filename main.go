@@ -90,6 +90,8 @@ func getTitle(w http.ResponseWriter, r *http.Request) (string, error) {
 }
 
 func main() {
+	// TODO: 1 - Refactor title code and error handling into function literals
+	// TODO: 2 - Refactor these methods out to a controller file
 	http.HandleFunc("/view/", viewHandler)
 	http.HandleFunc("/edit/", editHandler)
 	http.HandleFunc("/save/", saveHandler)
