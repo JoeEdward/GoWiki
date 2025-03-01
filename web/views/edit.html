@@ -1,8 +1,15 @@
+{{ define "title" }} Edit {{ .Title }} {{ end }}
+{{ define "extra-nav" }} <a class="nav-title" href="/view/{{.Title}}">View Page</a> {{ end }}
+
 {{ define "content" }}
-<h1>Edit {{ .Title }}</h1>
-<form action="/save/{{ .Title }}">
-    <input name="body" value="{{ printf "%s" .Body }}"></input>
-    <button type="submit">Save</button>
-</form>
+<div class="container mx-auto flex justify-center">
+    <div class="card flex justify-center w-full min-lg:w-1/2">
+        <form action="/save/{{ .Title }}" class="flex flex-col gap-2 w-full">
+            <label for="body">Page content:</label>
+            <textarea name="body" value="">{{ printf "%s" .Body }}</textarea>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</div>
 {{ end }}
 

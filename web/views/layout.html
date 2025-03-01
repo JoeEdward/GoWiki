@@ -3,9 +3,19 @@
     <head>
         <script src="/static/index.js"></script>
         <link rel="stylesheet" href="/static/index.css"/>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>GoWiki - {{ block "title"  .}} {{ end }}</title>
     </head>
 </html>
-<h1 class="mt-10">This is a layout</h1>
+<div class="sticky top-0 px-2 shadow-xl mb-5 bg-blue-400 h-16 grid grid-cols-3 items-center">
+    <h1 class="nav-title">GoWiki</h1>
+    <h1 class="nav-title text-center">{{ block "title"  .}} {{ end }}</h1>
+    <div class="justify-self-end">
+        {{ block "extra-nav" . }} {{ end }}
+    </div>
+</div>
+
 {{block "content" .}}
                 <!-- Fallback, if "content" is not defined elsewhere -->
 {{end}}

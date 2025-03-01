@@ -2,12 +2,13 @@ package main
 
 import (
 	"embed"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"regexp"
+
+	"github.com/joho/godotenv"
 )
 
 //go:embed web/views/*
@@ -18,17 +19,30 @@ var (
 	edit = parse("web/views/edit.html")
 )
 
-var templates = template.Must(template.ParseFiles("web/views/edit.html", "web/views/view.html"))
 var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
 
 func parse(file string) *template.Template {
-	return template.Must(
-		template.New("layout.html").ParseFS(files, "web/views/layout.html", file))
+	if isDevelopment() {
+		return template.Must(
+			template.New("layout.html").ParseFiles("web/views/layout.html", file),
+		)
+	} else {
+		return template.Must(
+			template.New("layout.html").ParseFS(files, "web/views/layout.html", file),
+		)
+	}
+
 }
 
 type Page struct {
 	Title string
 	Body  []byte
+}
+
+func isDevelopment() bool {
+	godotenv.Load(".env")
+
+	return os.Getenv("GO_DEVELOPMENT") != ""
 }
 
 func (p *Page) save() error {
@@ -51,8 +65,11 @@ func viewHandler(w http.ResponseWriter, r *http.Request, title string) {
 		http.Redirect(w, r, "/edit/"+title, http.StatusFound)
 		return
 	}
-	renderTemplate(w, "view", p)
-	view.Execute(w, p)
+	if isDevelopment() {
+		parse("web/views/view.html").Execute(w, p)
+	} else {
+		view.Execute(w, p)
+	}
 }
 
 func editHandler(w http.ResponseWriter, r *http.Request, title string) {
@@ -60,7 +77,11 @@ func editHandler(w http.ResponseWriter, r *http.Request, title string) {
 	if err != nil {
 		p = &Page{Title: title}
 	}
-	edit.Execute(w, p)
+	if isDevelopment() {
+		parse("web/views/edit.html").Execute(w, p)
+	} else {
+		edit.Execute(w, p)
+	}
 }
 
 func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
@@ -72,13 +93,6 @@ func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
 		return
 	}
 	http.Redirect(w, r, "/view/"+title, http.StatusFound)
-}
-
-func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
-	err := templates.ExecuteTemplate(w, tmpl+".html", p)
-	if err != nil {
-		http.Error(w, templates.DefinedTemplates(), http.StatusInternalServerError)
-	}
 }
 
 func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
@@ -99,5 +113,5 @@ func main() {
 	http.HandleFunc("/save/", makeHandler(saveHandler))
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("dist"))))
 	log.Fatal(http.ListenAndServe(":8080", nil))
-	fmt.Println("Running local development server on: http://localhost:8080")
+	log.Default().Print("Running local development server on: http://localhost:8080")
 }
