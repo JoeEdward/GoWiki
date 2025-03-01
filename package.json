@@ -1,0 +1,31 @@
+{
+  "name": "gowiki",
+  "version": "1.0.0",
+  "description": "## Description Web Project to learn go and create a Wiki and blog for me to post code stuff im up to",
+  "main": "dist/index.js",
+  "source": "web/js/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoeEdward/GoWebTutorial.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JoeEdward/GoWebTutorial/issues"
+  },
+  "homepage": "https://github.com/JoeEdward/GoWebTutorial#readme",
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.0.9",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.3",
+    "postcss-nested": "^7.0.2",
+    "tailwindcss": "^4.0.9"
+  },
+  "devDependencies": {
+    "parcel": "^2.13.3"
+  }
+}

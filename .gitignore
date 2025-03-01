@@ -1,2 +1,4 @@
 *.txt
 main
+node_modules
+dist
