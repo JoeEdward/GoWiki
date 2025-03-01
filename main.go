@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"html/template"
 	"log"
@@ -9,8 +10,21 @@ import (
 	"regexp"
 )
 
-var templates = template.Must(template.ParseFiles("html/edit.html", "html/view.html"))
+//go:embed web/views/*
+var files embed.FS
+
+var (
+	view = parse("web/views/view.html")
+	edit = parse("web/views/edit.html")
+)
+
+var templates = template.Must(template.ParseFiles("web/views/edit.html", "web/views/view.html"))
 var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
+
+func parse(file string) *template.Template {
+	return template.Must(
+		template.New("layout.html").ParseFS(files, "web/views/layout.html", file))
+}
 
 type Page struct {
 	Title string
@@ -38,6 +52,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request, title string) {
 		return
 	}
 	renderTemplate(w, "view", p)
+	view.Execute(w, p)
 }
 
 func editHandler(w http.ResponseWriter, r *http.Request, title string) {
@@ -45,7 +60,7 @@ func editHandler(w http.ResponseWriter, r *http.Request, title string) {
 	if err != nil {
 		p = &Page{Title: title}
 	}
-	renderTemplate(w, "edit", p)
+	edit.Execute(w, p)
 }
 
 func saveHandler(w http.ResponseWriter, r *http.Request, title string) {
@@ -82,6 +97,7 @@ func main() {
 	http.HandleFunc("/view/", makeHandler(viewHandler))
 	http.HandleFunc("/edit/", makeHandler(editHandler))
 	http.HandleFunc("/save/", makeHandler(saveHandler))
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("dist"))))
 	log.Fatal(http.ListenAndServe(":8080", nil))
 	fmt.Println("Running local development server on: http://localhost:8080")
 }

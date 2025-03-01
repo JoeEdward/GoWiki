@@ -1,2 +1,5 @@
 *.txt
 main
+node_modules
+dist
+.parcel-cache
