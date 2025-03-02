@@ -18,3 +18,7 @@ Web Project to learn go and create a Wiki and blog for me to post code stuff im 
 ### 1/3/25
 - Learned how to use embed FS to embed html files into the go binary for faster access
 - Learned how to use parcel and postcss to bundle assets
+
+### 2/3/25
+- Added the Mux package to handle routing (Altho I dont think i need it now)
+- Learned about GO package management
