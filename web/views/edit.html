@@ -7,7 +7,7 @@
         <form action="/save/{{ .Title }}" class="flex flex-col gap-2 w-full">
             <label for="body">Page content:</label>
             <textarea name="body" value="">{{ printf "%s" .Body }}</textarea>
-            <button type="submit">Save</button>
+            <button class="btn btn-primary" type="submit">Save</button>
         </form>
     </div>
 </div>
